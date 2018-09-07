@@ -1,0 +1,9 @@
+oauthlib=2.1.0
+requests-oauthlib=1.0.0
+twython=3.7.0
+google-cloud-vision=0.32.0
+gpiozero
+picamera
+rpi.gpio
+pigpio
+pillow
