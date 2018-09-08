@@ -52,6 +52,9 @@ wpa_cli -i wlan0 reconfigure
 ```
 
 ## Twitter Authentication ##
+There's a multi-step process to getting the proper keys. Run twitter_authentication.py locally and follow the guide here:
+https://twython.readthedocs.io/en/latest/usage/starting_out.html#dynamic-function-arguments
+
 
 ## Google API ##
 

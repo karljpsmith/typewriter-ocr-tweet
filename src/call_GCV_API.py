@@ -51,7 +51,7 @@ def interpretResponse(full_text, num_sentences=1):
         full_text_blob = full_text_blob.correct()
         full_text = str(full_text_blob)
 
-    periods = [pos for pos, char in enumerate(full_text) if char == '.' or char==","]
+    periods = [pos for pos, char in enumerate(full_text) if char == '.']  # or char==","]
     if len(periods) < num_sentences+1:
         if len(full_text) > max_tweet_length:
             return False

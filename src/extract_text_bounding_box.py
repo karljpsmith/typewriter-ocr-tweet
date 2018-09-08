@@ -1,18 +1,15 @@
 import pickle
 import json
-from src.call_GCV_API import ocr_picture_from_path, interpretResponse
-from src.utils import crop
-from PIL import Image
 from google.protobuf.json_format import MessageToJson
 
 def getBoundingBox(response, num_sentences=1):
 #with open('../test_pics/meta_729.pkl', 'rb') as f:
     """
-        gets the coordinates of the box that bounds the text to tweet
-        :param response: textAnnotation - the textAnnotation object to pull sentences from
-        :param num_sentences: int - the number of sentences in the tweet
-        :returns: the tuple (minX, maxX, minY, maxY) of the bounding box
-        """
+    gets the coordinates of the box that bounds the text to tweet
+    :param response: textAnnotation - the textAnnotation object to pull sentences from
+    :param num_sentences: int - the number of sentences in the tweet
+    :returns: the tuple (minX, maxX, minY, maxY) of the bounding box
+    """
     response = response.full_text_annotation
     currentSentence = 0
     serialized = MessageToJson(response)
@@ -73,21 +70,5 @@ def getBoundingBox(response, num_sentences=1):
                         block_text = block_text + symbol['text']
     return(minX, minY, maxX, maxY)
 
-filepath = '/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/20180224_090209.jpg'
-response = ocr_picture_from_path(filepath)
-print(interpretResponse(response,1))
-print(getBoundingBox(response, 1))
-
-"""
-with open('../test_pics/meta_729.pkl', 'rb') as f:
-    response = pickle.load(f)
-    #print(getBoundingBox(response))
-filepath = '/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/20180224_090209.jpg'
-im=Image.open(filepath)
-im.rotate(270).show()
-print(im.size) # (width,height) tuple
-#response = ocr_picture_from_path(im)
-cropBounds = getBoundingBox(response, 1)
-print(cropBounds)
-crop('/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/20180224_090209.jpg', cropBounds, '/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/CROPPED_20180224_090209.jpg')
-#print(getBoundingBox(response, 1))"""
+#filepath = '/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/20180224_090209.jpg'
+#response = ocr_picture_from_path(filepath)
