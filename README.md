@@ -51,6 +51,10 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 wpa_cli -i wlan0 reconfigure
 ```
 
+The python script doesn't delete the files after generating them, so it's a good idea to run the following every once in a while:
+```find Desktop/ -name "*.jpg" -type f -exec rm -rf {} \;```
+which removes all files with the extension .jpg on the Desktop
+
 ## Twitter Authentication ##
 There's a multi-step process to getting the proper keys. Run twitter_authentication.py locally and follow the guide here:
 https://twython.readthedocs.io/en/latest/usage/starting_out.html#dynamic-function-arguments

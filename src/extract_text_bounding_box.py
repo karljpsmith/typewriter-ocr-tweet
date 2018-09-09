@@ -1,15 +1,18 @@
 import pickle
 import json
+from src.call_GCV_API import ocr_picture_from_path, interpretResponse
+from src.utils import crop
+from PIL import Image
 from google.protobuf.json_format import MessageToJson
 
 def getBoundingBox(response, num_sentences=1):
 #with open('../test_pics/meta_729.pkl', 'rb') as f:
     """
-    gets the coordinates of the box that bounds the text to tweet
-    :param response: textAnnotation - the textAnnotation object to pull sentences from
-    :param num_sentences: int - the number of sentences in the tweet
-    :returns: the tuple (minX, maxX, minY, maxY) of the bounding box
-    """
+        gets the coordinates of the box that bounds the text to tweet
+        :param response: textAnnotation - the textAnnotation object to pull sentences from
+        :param num_sentences: int - the number of sentences in the tweet
+        :returns: the tuple (minX, maxX, minY, maxY) of the bounding box
+        """
     response = response.full_text_annotation
     currentSentence = 0
     serialized = MessageToJson(response)
