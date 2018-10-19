@@ -1,7 +1,6 @@
 # Typewriter Tweeter #
 This program enables a typewriter to tweet out the text of the last sentence it typed 
-(and, optionally, an image of that sentence). The typewriter has a small camera affixed to it, which 
-is controlled by a Raspberry Pi 3B+. The script (which is run on boot by cron) listens for three tweet buttons
+(and, optionally, an image of that sentence). The typewriter has a small Raspberry Pi 3B+ -controlled camera affixed to it. The script (which is run on boot by cron) listens for three tweet buttons
 and a shutdown button. When one of the tweet buttons is pressed, a picture is taken and uploaded to the 
 Google Cloud Vision API, which performs OCR extraction and returns a json blob, which is interpreted by the
 Raspberry Pi, reduced to the last sentence (or two, or three), and tweeted out using Twython.
@@ -44,8 +43,7 @@ the second column is the pid. then use the kill command as such :
 
 ###Wifi
 To add new wifi configurations on a new network, you'll need to ssh through the 
-pi's ethernet port. You can test that the connection is good with ```ping [IP address]``` in the terminal,
-and to change the wifi config:
+pi's ethernet port and change the wifi config:
 ```
 ssh pi@raspberrypi.local
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
@@ -83,5 +81,4 @@ Start here: https://console.cloud.google.com/apis
 Click on credentials. I've saved mine as a json blob in a folder (not included in the repo) called /auth
 
 ##TODO
-1) Substitute textblob's spellchecker for something that is context aware (maybe https://github.com/bakwc/JamSpell)
-2) Fix the wifi detection (it registers success on mobile wifi, but can't tweet.)
+1) Fix the wifi detection (it occasionally registers success on mobile wifi, but can't tweet.)
