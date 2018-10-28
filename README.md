@@ -25,7 +25,7 @@ to the cron file with the command ```crontab -e```). pi_boot.sh activates a virt
 runs _main.py there.
 I had the permissions drift on me for this - if suddenly pi_boot.sh doesn't work try ```chmod 777 pi_boot.sh```
 
-###Development:###
+### Development: ###
 To sync pi_boot:
 ```
 rsync -arv /Users/karlsmith/Desktop/pi_boot.sh pi@raspberrypi.local:/home/pi/
@@ -41,7 +41,7 @@ user      2430     1  0 Jul03 ?        00:00:01 /usr/bin/python -tt /usr/sbin/yu
 the second column is the pid. then use the kill command as such :
 ```kill -9 2430 (i.e. the pid returned)```
 
-###Wifi###
+### Wifi ###
 To add new wifi configurations on a new network, you'll need to ssh through the 
 pi's ethernet port and change the wifi config:
 ```
@@ -54,7 +54,7 @@ The python script doesn't delete the files after generating them, so it's a good
 ```find Desktop/ -name "*.jpg" -type f -exec rm -rf {} \;```
 which removes all files with the extension .jpg on the Desktop
 
-###Hardware###
+### Hardware ###
 I purchased the following hardware:
 1) CanaKit Raspberry Pi 3 B+ (B Plus) with Premium Clear Case and 2.5A Power Supply https://www.amazon.com/gp/product/B07BC7BMHY
 2) Elegoo EL-CK-002 Electronic Fun Kit Bundle https://www.amazon.com/gp/product/B01ERP6WL4
@@ -80,6 +80,6 @@ You'll need to generate credentials for your pi to call the google cloud vision 
 Start here: https://console.cloud.google.com/apis
 Click on credentials. I've saved mine as a json blob in a folder (not included in the repo) called /auth
 
-##TODO##
+## TODO ##
 1) Better error handling for wifi detection (it occasionally registers success on mobile wifi, but can't tweet.)
 2) Add precision threshold for individual letters, so that the OCR doesn't just guess at X-ed out letters.
