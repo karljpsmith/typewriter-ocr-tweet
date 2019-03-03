@@ -5,6 +5,7 @@ try:
 except:
     import http.client as httplib
 
+
 def time_it(method):
     def timed(*args, **kw):
         start_time = time.time()
@@ -13,6 +14,7 @@ def time_it(method):
         print("Call took {} seconds".format(run_time))
         return result
     return timed
+
 
 def check_wifi_status():
     conn = httplib.HTTPConnection("www.google.com", timeout=5)
@@ -23,6 +25,7 @@ def check_wifi_status():
     except:
         conn.close()
         return False
+
 
 def crop(image_path, coords, saved_location):
     """

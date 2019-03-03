@@ -8,6 +8,9 @@ FLAG_TWEET_FROM_TEST_ACCOUNT = False
 #  Test account: https://twitter.com/KarlSmi27061701
 #  Real account: https://twitter.com/10centstories
 
+
+# NOTE: If you're running this on boot via cron, the path begins "../auth/"
+# But if you're running it with python3 on the pi (i.e. debugging) the path beginning is "auth/"
 def get_saved_credentials():
     if (FLAG_TWEET_FROM_TEST_ACCOUNT):
         with open('../auth/twitter_keys.pkl', 'rb') as f:

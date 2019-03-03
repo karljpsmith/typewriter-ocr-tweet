@@ -8,12 +8,15 @@ from google.protobuf.json_format import MessageToJson
 from utils import time_it
 from tweet import max_tweet_length
 
+# NOTE: If you're running this on boot via cron, the path begins "../auth/"
+# But if you're running it with python3 on the pi (i.e. debugging) the path beginning is "auth/"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../auth/image-annotation-5ce604dffdbc.json"
+
 FLAG_DO_SPELLCHECK = False
 period = '.'
 x_margin = 10  # px
 y_margin = 10  # px
-character_probability_cutoff = 0.5  # OCR must have at least this confidence before adding the letter
+character_probability_cutoff = 0.4  # OCR must have at least this confidence before adding the letter
 
 
 @time_it
@@ -23,7 +26,6 @@ def ocr_picture_from_path(path):
     :param path: str - the location of the picture to send
     :returns: str - the text value of the raw api response
     """
-    print("calling GCV API")
     client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
@@ -61,12 +63,12 @@ def interpretResponse(full_text, num_sentences=1):
     startpos = periods[(-1)-num_sentences] + 1
 
     if full_text[startpos] == " ":
-        startpos+=1
+        startpos += 1
 
     return full_text[startpos:]
 
 
-def getBoundingBox(response, num_sentences=200):
+def getBoundingBox(response, num_sentences=1):
     """
     gets the coordinates of the box that bounds the text to tweet
     :param response: textAnnotation - the textAnnotation object to pull sentences from
@@ -98,6 +100,7 @@ def getBoundingBox(response, num_sentences=200):
             block_text = ''
             block_text = block_text + block_symbols[0]['text']
             boundingBoxVertices = block_symbols[0]['boundingBox']['vertices']
+
             if stop == False:
                 if minX == False:
                     minX = boundingBoxVertices[0]['x']
@@ -114,11 +117,10 @@ def getBoundingBox(response, num_sentences=200):
                     if coord['y'] < minY:
                         minY = coord['y']
 
-            for symbol in block_symbols[1:]:
-                # print(symbol)
-                print("{}, {}".format(symbol['text'], symbol['confidence']))
+            for i, symbol in enumerate(block_symbols):
+                #  print("{}, {}".format(symbol['text'], symbol['confidence']))
 
-                if symbol['text'] == '.':
+                if symbol['text'] == '.' or symbol['text'] == '!' and i is not 0:
                     currentSentence += 1
                     if currentSentence == num_sentences:
                         stop = True
@@ -139,12 +141,11 @@ def getBoundingBox(response, num_sentences=200):
 
                 if symbol['confidence'] >= character_probability_cutoff and not stop:
                     if 'detectedBreak' in symbol['property']:
-                        print(" SPACE ")
                         text_to_tweet += " " + symbol['text']
                     else:
                         text_to_tweet += symbol['text']
 
-    return minX - x_margin, minY - y_margin, maxX + x_margin, maxY + y_margin, text_to_tweet[::-1]
+    return (minX - x_margin, minY - y_margin, maxX + x_margin, maxY + y_margin), text_to_tweet[::-1]
 
 
 # Test:

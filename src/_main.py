@@ -1,6 +1,5 @@
 import threading
 import time
-import sys
 import os
 from subprocess import call
 from gpiozero import LED, Button
@@ -55,8 +54,10 @@ def shutdown():
 
 def process_picture(picture_filepath, btn):
 
+    print('calling Google')
     response = ocr_picture_from_path(picture_filepath)
 
+    print('verifying pic')
     text_to_tweet = {
         button_tweet_1: interpretResponse(response, 1),
         button_tweet_2: interpretResponse(response, 2),
@@ -64,20 +65,27 @@ def process_picture(picture_filepath, btn):
                         }[btn]
 
     if text_to_tweet:  # returns False if a tweet can't be extracted
+        print('parsing text')
         bounding_box, text_to_tweet = {
             button_tweet_1: getBoundingBox(response, 1),
             button_tweet_2: getBoundingBox(response, 2),
             button_tweet_3: getBoundingBox(response, 3),
         }[btn]
 
+        print('cropping image')
         newFilepath = croppedfilepath.format(str(time.time()))
+
         crop(picture_filepath, bounding_box, newFilepath)
+        print('tweeting...')
         tweet_with_image(text_to_tweet, newFilepath)
+
         led_blue.on()
         time.sleep(1)
         led_blue.off()
-        os.remove(picture_filepath)
-        os.remove(newFilepath)
+
+    print('deleting files')
+    os.remove(picture_filepath)
+    os.remove(newFilepath)
 
 
 def tweet_pressed(btn):
