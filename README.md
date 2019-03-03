@@ -50,10 +50,6 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 wpa_cli -i wlan0 reconfigure
 ```
 
-The python script doesn't delete the files after generating them, so it's a good idea to run the following every once in a while:
-```find Desktop/ -name "*.jpg" -type f -exec rm -rf {} \;```
-which removes all files with the extension .jpg on the Desktop
-
 ### Hardware ###
 I purchased the following hardware:
 1) CanaKit Raspberry Pi 3 B+ (B Plus) with Premium Clear Case and 2.5A Power Supply https://www.amazon.com/gp/product/B07BC7BMHY
@@ -79,7 +75,4 @@ https://twython.readthedocs.io/en/latest/usage/starting_out.html#dynamic-functio
 You'll need to generate credentials for your pi to call the google cloud vision API. 
 Start here: https://console.cloud.google.com/apis
 Click on credentials. I've saved mine as a json blob in a folder (not included in the repo) called /auth
-
-## TODO ##
-1) Better error handling for wifi detection (it occasionally registers success on mobile wifi, but can't tweet.)
-2) Add precision threshold for individual letters, so that the OCR doesn't just guess at X-ed out letters.
+You can set the threshold on the character recognition. Right now it's 0.4, set in call_GVC_API.py

@@ -1,4 +1,5 @@
-src/twitter_authentication.py
-auth
-Raspbian\ Image
-
+/src/twitter_authentication.py
+/auth/
+/Raspbian\ Image/
+/Rasp_Pi_configs
+/venv/
