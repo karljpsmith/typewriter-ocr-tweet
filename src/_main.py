@@ -1,6 +1,7 @@
 import threading
 import time
 import sys
+import os
 from subprocess import call
 from gpiozero import LED, Button
 from picamera import PiCamera
@@ -31,7 +32,7 @@ croppedfilepath = '/home/pi/Desktop/CROPPED_{}.jpg'
 
 def monitor_wifi_status():
     while True:
-        if (check_wifi_status()):
+        if check_wifi_status():
             print('wifi on')
             led_red.on()
             time.sleep(10)
@@ -62,19 +63,21 @@ def process_picture(picture_filepath, btn):
         button_tweet_3: interpretResponse(response, 3),
                         }[btn]
 
-    if (text_to_tweet): #returns False if a tweet can't be extracted
-        boundingBox = {
+    if text_to_tweet:  # returns False if a tweet can't be extracted
+        bounding_box = {
             button_tweet_1: getBoundingBox(response, 1),
             button_tweet_2: getBoundingBox(response, 2),
             button_tweet_3: getBoundingBox(response, 3),
         }[btn]
 
         newFilepath = croppedfilepath.format(str(time.time()))
-        crop(picture_filepath, boundingBox, newFilepath)
+        crop(picture_filepath, bounding_box, newFilepath)
         tweet_with_image(text_to_tweet, newFilepath)
         led_blue.on()
         time.sleep(1)
         led_blue.off()
+        os.remove(picture_filepath)
+        os.remove(newFilepath)
 
 
 def tweet_pressed(btn):
