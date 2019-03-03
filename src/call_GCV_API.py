@@ -13,7 +13,7 @@ FLAG_DO_SPELLCHECK = False
 period = '.'
 x_margin = 10  # px
 y_margin = 10  # px
-
+character_probability_cutoff = 0.5  # OCR must have at least this confidence before adding the letter
 
 
 @time_it
@@ -65,7 +65,8 @@ def interpretResponse(full_text, num_sentences=1):
 
     return full_text[startpos:]
 
-def getBoundingBox(response, num_sentences=1):
+
+def getBoundingBox(response, num_sentences=200):
     """
     gets the coordinates of the box that bounds the text to tweet
     :param response: textAnnotation - the textAnnotation object to pull sentences from
@@ -73,6 +74,7 @@ def getBoundingBox(response, num_sentences=1):
     :returns: the tuple (minX, maxX, minY, maxY) of the bounding box
     """
     response = response.full_text_annotation
+    text_to_tweet = ""
     currentSentence = 0
     serialized = MessageToJson(response)
     jsonDoc = json.loads(serialized)
@@ -113,12 +115,16 @@ def getBoundingBox(response, num_sentences=1):
                         minY = coord['y']
 
             for symbol in block_symbols[1:]:
+                # print(symbol)
+                print("{}, {}".format(symbol['text'], symbol['confidence']))
+
                 if symbol['text'] == '.':
                     currentSentence += 1
                     if currentSentence == num_sentences:
                         stop = True
+
                 else:
-                    if stop == False:
+                    if not stop:
                         boundingBoxVertices = symbol['boundingBox']['vertices']
                         for coord in boundingBoxVertices[1:]:
                             if coord['x'] > maxX:
@@ -130,8 +136,19 @@ def getBoundingBox(response, num_sentences=1):
                             if coord['y'] < minY:
                                 minY = coord['y']
                         block_text = block_text + symbol['text']
-    return(minX - x_margin, minY - y_margin, maxX + x_margin, maxY + y_margin)
+
+                if symbol['confidence'] >= character_probability_cutoff and not stop:
+                    if 'detectedBreak' in symbol['property']:
+                        print(" SPACE ")
+                        text_to_tweet += " " + symbol['text']
+                    else:
+                        text_to_tweet += symbol['text']
+
+    return minX - x_margin, minY - y_margin, maxX + x_margin, maxY + y_margin, text_to_tweet[::-1]
 
 
 # Test:
+#response = ocr_picture_from_path("/Users/karlsmith/PycharmProjects/typewriter-ocr-tweet/test_pics/20180224_084729.jpg")
+#print(getBoundingBox(response))
+
 # print(interpretResponse("Breed cats as big as elephants and elephants as big as cats. Rebuild the Berlin wall. Break California into 3 separate states.",3))

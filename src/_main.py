@@ -64,7 +64,7 @@ def process_picture(picture_filepath, btn):
                         }[btn]
 
     if text_to_tweet:  # returns False if a tweet can't be extracted
-        bounding_box = {
+        bounding_box, text_to_tweet = {
             button_tweet_1: getBoundingBox(response, 1),
             button_tweet_2: getBoundingBox(response, 2),
             button_tweet_3: getBoundingBox(response, 3),
