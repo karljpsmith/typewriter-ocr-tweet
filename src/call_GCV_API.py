@@ -10,7 +10,8 @@ from tweet import max_tweet_length
 
 # NOTE: If you're running this on boot via cron, the path begins "../auth/"
 # But if you're running it with python3 on the pi (i.e. debugging) the path beginning is "auth/"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../auth/image-annotation-5ce604dffdbc.json"
+dir_path = os.path.dirname(os.path.abspath(__file__))
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(dir_path, 'auth/image-annotation-5ce604dffdbc.json')
 
 FLAG_DO_SPELLCHECK = False
 period = '.'

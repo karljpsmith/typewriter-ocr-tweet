@@ -1,4 +1,5 @@
 from twython import Twython
+import os
 import pickle
 
 # There's a multi-step process to getting the proper keys in twitter_authentication.py
@@ -12,10 +13,12 @@ FLAG_TWEET_FROM_TEST_ACCOUNT = False
 # NOTE: If you're running this on boot via cron, the path begins "../auth/"
 # But if you're running it with python3 on the pi (i.e. debugging) the path beginning is "auth/"
 def get_saved_credentials():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(dir_path, 'auth/image-annotation-5ce604dffdbc.json')
     if (FLAG_TWEET_FROM_TEST_ACCOUNT):
-        with open('../auth/twitter_keys.pkl', 'rb') as f:
+        with open(os.path.join(dir_path, 'auth/twitter_keys.pkl'), 'rb') as f:
             return pickle.load(f)
-    with open('../auth/twitter_keys_PROD.pkl', 'rb') as f:
+    with open(os.path.join(dir_path, 'auth/twitter_keys_PROD.pkl'), 'rb') as f:
         return pickle.load(f)
 
 

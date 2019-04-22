@@ -66,11 +66,21 @@ def process_picture(picture_filepath, btn):
 
     if text_to_tweet:  # returns False if a tweet can't be extracted
         print('parsing text')
-        bounding_box, text_to_tweet = {
-            button_tweet_1: getBoundingBox(response, 1),
-            button_tweet_2: getBoundingBox(response, 2),
-            button_tweet_3: getBoundingBox(response, 3),
-        }[btn]
+        try:
+            bounding_box, text_to_tweet = {
+                button_tweet_1: getBoundingBox(response, 1),
+                button_tweet_2: getBoundingBox(response, 2),
+                button_tweet_3: getBoundingBox(response, 3),
+            }[btn]
+
+        except KeyError as error:
+            # Usually means it could not pull text from image
+            led_red.off()
+            time.sleep(0.5)
+            led_red.on()
+            print('deleting files')
+            os.remove(picture_filepath)
+            return
 
         print('cropping image')
         newFilepath = croppedfilepath.format(str(time.time()))
@@ -103,8 +113,8 @@ def tweet_pressed(btn):
 threading.Thread(target=monitor_wifi_status).start()
 threading.Thread(target=shutdown).start()
 camera = PiCamera()
-camera.rotation = 180
-camera.start_preview()
+camera.resolution = camera.MAX_RESOLUTION
+camera.start_preview(resolution=(1280, 720))
 print('waiting for button')
 for button in (button_tweet_1, button_tweet_2, button_tweet_3):
     button.when_pressed = tweet_pressed
